@@ -13,7 +13,7 @@ app.use(cookieParser())
 // A5aDeikTVUmjQ0rt
 
 
-const { MongoClient, ServerApiVersion, Collection } = require('mongodb');
+const { MongoClient, ServerApiVersion, Collection, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://task-management:A5aDeikTVUmjQ0rt@cluster0.kndeci6.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -40,7 +40,7 @@ async function run() {
         if(req.query.userEmail){
             query={userEmail:req.query.userEmail}
         }
-        console.log(req.query.userEmail);
+        // console.log(req.query.userEmail);
         const result=await taskCollection.find(query).toArray()
         res.send(result)
     })
@@ -50,10 +50,19 @@ async function run() {
     // post :: create task
      app.post("/api/v1/create-task",async(req,res)=>{
         const task=req.body 
-        console.log(task);
+        // console.log(task);
         const result=await taskCollection.insertOne(task)
         res.send(result)
      })
+
+
+    //  delete :: delete task
+    app.delete("/api/v1/:taskId/delete-task",async(req,res)=>{
+        const taskId=req.params.taskId 
+        const query={_id:new ObjectId(taskId)}
+        const result=await taskCollection.deleteOne(query)
+        res.send(result)
+    })
 
 
     // Send a ping to confirm a successful connection
