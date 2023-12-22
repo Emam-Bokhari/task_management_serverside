@@ -46,6 +46,15 @@ async function run() {
     })
 
 
+    // get :: show-task
+    app.get("/api/v1/:taskId/show-task",async(req,res)=>{
+        const taskId=req.params.taskId 
+        const query={_id:new ObjectId(taskId)}
+        const result=await taskCollection.findOne(query)
+        res.send(result)
+    })
+
+
 
     // post :: create task
      app.post("/api/v1/create-task",async(req,res)=>{
@@ -54,6 +63,25 @@ async function run() {
         const result=await taskCollection.insertOne(task)
         res.send(result)
      })
+
+
+    //  patch :: edit-task
+    app.patch("/api/v1/:taskId/edit-task",async(req,res)=>{
+        const taskData=req.body 
+        const taskId=req.params.taskId 
+        const query={_id:new ObjectId(taskId)}
+        const editTask={
+            $set:{
+                title:taskData.title,
+                category:taskData.category,
+                date:taskData.date,
+                description:taskData.description,
+                userEmail:taskData.userEmail
+            }
+        }
+        const result=await taskCollection.updateOne(query,editTask)
+        res.send(result)
+    })
 
 
     //  delete :: delete task
