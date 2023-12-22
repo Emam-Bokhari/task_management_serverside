@@ -33,6 +33,21 @@ async function run() {
      const database=client.db("taskManagementDB")
      const taskCollection=database.collection("task")
 
+
+    //  get :: show-all-task
+    app.get("/api/v1/show-all-task",async(req,res)=>{
+        let query={}
+        if(req.query.userEmail){
+            query={userEmail:req.query.userEmail}
+        }
+        console.log(req.query.userEmail);
+        const result=await taskCollection.find(query).toArray()
+        res.send(result)
+    })
+
+
+
+    // post :: create task
      app.post("/api/v1/create-task",async(req,res)=>{
         const task=req.body 
         console.log(task);
